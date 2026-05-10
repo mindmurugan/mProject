@@ -1,0 +1,20 @@
+server:
+  host: "127.0.0.1"
+  port: 8765
+  api_key: "change-me-before-use"
+
+downloads:
+  # Path where files will be saved (OneDrive/GDrive sync folder)
+  destination: "C:\\Users\\%USERNAME%\\OneDrive\\Downloads"
+  max_concurrent: 3
+  temp_dir: "%TEMP%\\download-manager"
+
+engines:
+  # aria2c binary path; null = auto-detect from PATH
+  aria2c_path: null
+  # Prefer aria2c for direct URLs, yt-dlp for media sites
+  prefer_aria2c_for_direct: true
+
+logging:
+  level: "INFO"
+  file: "%LOCALAPPDATA%\\download-manager\\daemon.log"

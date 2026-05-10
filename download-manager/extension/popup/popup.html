@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download Manager</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <img src="../icons/icon48.png" alt="" class="logo" />
+    <h1>Download Manager</h1>
+    <button id="open-options" title="Settings" aria-label="Settings">⚙</button>
+  </header>
+
+  <section id="submit-section">
+    <input
+      id="url-input"
+      type="url"
+      placeholder="Paste URL to download…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <div class="submit-row">
+      <select id="engine-select">
+        <option value="auto">Auto</option>
+        <option value="ytdlp">yt-dlp</option>
+        <option value="aria2c">aria2c</option>
+      </select>
+      <button id="submit-btn">Download</button>
+    </div>
+  </section>
+
+  <section id="jobs-section">
+    <div class="section-header">
+      <span>Active Downloads</span>
+      <span id="job-count" class="badge">0</span>
+    </div>
+    <ul id="job-list" aria-live="polite">
+      <li class="empty-state">No downloads yet.</li>
+    </ul>
+  </section>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

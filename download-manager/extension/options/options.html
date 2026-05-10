@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Download Manager – Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <img src="../icons/icon48.png" alt="" />
+      <h1>Download Manager Settings</h1>
+    </header>
+
+    <form id="settings-form" novalidate>
+      <fieldset>
+        <legend>Daemon connection</legend>
+
+        <label for="server-url">Server URL</label>
+        <input
+          id="server-url"
+          type="url"
+          placeholder="http://127.0.0.1:8765"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <p class="hint">Base URL of the running FastAPI daemon.</p>
+
+        <label for="api-key">API Key</label>
+        <input
+          id="api-key"
+          type="password"
+          placeholder="your-secret-api-key"
+          autocomplete="off"
+        />
+        <p class="hint">Must match the <code>api_key</code> value in the daemon's <code>config.yaml</code>.</p>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit" id="save-btn">Save settings</button>
+        <button type="button" id="test-btn">Test connection</button>
+        <span id="status-msg" aria-live="polite"></span>
+      </div>
+    </form>
+  </main>
+  <script src="options.js" type="module"></script>
+</body>
+</html>
