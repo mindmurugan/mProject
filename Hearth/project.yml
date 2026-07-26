@@ -1,0 +1,137 @@
+# XcodeGen project spec: https://github.com/yonaskolb/XcodeGen
+#
+#   brew install xcodegen
+#   cd Hearth && xcodegen generate
+#   open Hearth.xcodeproj
+#
+# Hand-editing a multi-target .xcodeproj (app + share extension + widget
+# extension, all depending on a local Swift package) is exactly the kind of
+# thing that produces unreviewable pbxproj diffs, so the project file itself
+# is generated from this spec rather than committed.
+
+name: Hearth
+options:
+  bundleIdPrefix: com.yourteam.hearth
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    TARGETED_DEVICE_FAMILY: "1,2" # iPhone + iPad
+
+packages:
+  HearthKit:
+    path: Packages/HearthKit
+
+targets:
+  Hearth:
+    type: application
+    platform: iOS
+    sources:
+      - path: App/Hearth
+    dependencies:
+      - package: HearthKit
+      - target: HearthDropZone
+        embed: true
+      - target: HearthWidgets
+        embed: true
+    info:
+      path: App/Hearth/Resources/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSLocationAlwaysAndWhenInUseUsageDescription: "Hearth notifies you both when one of you is near a place with items on your shared list, like the hardware store or grocery store."
+        NSLocationWhenInUseUsageDescription: "Hearth uses your location to trigger reminders near places on your shared list."
+    entitlements:
+      path: App/Hearth/Resources/Hearth.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.yourteam.hearth
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.yourteam.hearth
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.developer.usernotifications.communication: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourteam.hearth
+        PRODUCT_NAME: Hearth
+
+  HearthDropZone:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ShareExtension/HearthDropZone
+    dependencies:
+      - package: HearthKit
+    info:
+      path: ShareExtension/HearthDropZone/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+              NSExtensionActivationSupportsImageWithMaxCount: 10
+              NSExtensionActivationSupportsFileWithMaxCount: 10
+              NSExtensionActivationSupportsText: true
+    entitlements:
+      path: ShareExtension/HearthDropZone/HearthDropZone.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.yourteam.hearth
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.yourteam.hearth
+        com.apple.developer.icloud-services:
+          - CloudKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourteam.hearth.dropzone
+        PRODUCT_NAME: HearthDropZone
+
+  HearthWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: WidgetExtension/HearthWidgets
+    dependencies:
+      - package: HearthKit
+      - sdk: WidgetKit.framework
+      - sdk: AppIntents.framework
+    info:
+      path: WidgetExtension/HearthWidgets/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: WidgetExtension/HearthWidgets/HearthWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.yourteam.hearth
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.yourteam.hearth
+        com.apple.developer.icloud-services:
+          - CloudKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourteam.hearth.widgets
+        PRODUCT_NAME: HearthWidgets
+
+schemes:
+  Hearth:
+    build:
+      targets:
+        Hearth: all
+        HearthDropZone: all
+        HearthWidgets: all
+    run:
+      config: Debug
+    archive:
+      config: Release
